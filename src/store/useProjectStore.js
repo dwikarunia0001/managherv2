@@ -83,6 +83,18 @@ const useProjectStore = create((set, get) => ({
       };
     }),
 
+  deletePhaseData: (projectId, phaseKey) => {
+    set((state) => {
+      const project = state.projects.find(p => p.id === projectId);
+      if (project) {
+        if (project.data && project.data[phaseKey]) {
+          delete project.data[phaseKey];
+        }
+      }
+      return { projects: [...state.projects] };
+    });
+  },
+
   // Ambil data fase tertentu
   getPhaseData: (projectId, phaseKey) => {
     return get().projectData[projectId]?.[phaseKey] || {};
