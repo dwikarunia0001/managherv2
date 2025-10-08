@@ -4,8 +4,8 @@ import { create } from 'zustand';
 const useProjectStore = create((set, get) => ({
   // === Daftar Proyek ===
   projects: [
-    { id: '1', name: 'Kafe Cantik', manager: 'Rina S.' },
-    { id: '2', name: 'Online Store Fashion', manager: 'Dewi A.' },
+    { id: '1', name: 'Kafe Cantik', manager: 'Rina S.', imageUrl: '/only-one-red-shoes.png' },
+    { id: '2', name: 'Online Store Fashion', manager: 'Dewi A.', imageUrl: '/only-one-red-shoes.png' },
   ],
 
   // === Proyek yang sedang aktif ===
@@ -21,9 +21,44 @@ const useProjectStore = create((set, get) => ({
   addProject: (project) =>
     set((state) => {
       const newId = Date.now().toString();
-      const newProject = { ...project, id: newId };
+      const newProject = {
+        ...project,
+        id: newId,
+        imageUrl: project.imageUrl || '/only-one-red-shoes.png',
+      };
       return {
         projects: [...state.projects, newProject],
+      };
+    }),
+
+  // Edit proyek (nama, manajer, imageUrl)
+  updateProject: (id, updatedFields) =>
+    set((state) => ({
+      projects: state.projects.map((proj) =>
+        proj.id === id ? { ...proj, ...updatedFields } : proj
+      ),
+    })),
+
+  // Hapus proyek + semua datanya
+  deleteProject: (id) =>
+    set((state) => {
+      // Hapus dari daftar proyek
+      const updatedProjects = state.projects.filter((proj) => proj.id !== id);
+      
+      // Hapus data terkait dari projectData
+      const updatedProjectData = { ...state.projectData };
+      delete updatedProjectData[id];
+
+      // Jika proyek yang dihapus sedang aktif, reset currentProject
+      let updatedCurrentProject = state.currentProject;
+      if (state.currentProject?.id === id) {
+        updatedCurrentProject = updatedProjects.length > 0 ? updatedProjects[0] : null;
+      }
+
+      return {
+        projects: updatedProjects,
+        projectData: updatedProjectData,
+        currentProject: updatedCurrentProject,
       };
     }),
 
@@ -33,24 +68,25 @@ const useProjectStore = create((set, get) => ({
     set({ currentProject: project || null });
   },
 
-  // Di dalam store
-updatePhaseData: (projectId, phaseKey, data) =>
-  set((state) => {
-    const current = state.projectData[projectId] || {};
-    return {
-      projectData: {
-        ...state.projectData,
-        [projectId]: {
-          ...current,
-          [phaseKey]: { ...current[phaseKey], ...data },
+  // Update data fase tertentu untuk proyek
+  updatePhaseData: (projectId, phaseKey, data) =>
+    set((state) => {
+      const current = state.projectData[projectId] || {};
+      return {
+        projectData: {
+          ...state.projectData,
+          [projectId]: {
+            ...current,
+            [phaseKey]: { ...current[phaseKey], ...data },
+          },
         },
-      },
-    };
-  }),
+      };
+    }),
 
-getPhaseData: (projectId, phaseKey) => {
-  return get().projectData[projectId]?.[phaseKey] || {};
-},
+  // Ambil data fase tertentu
+  getPhaseData: (projectId, phaseKey) => {
+    return get().projectData[projectId]?.[phaseKey] || {};
+  },
 
   // Shortcut: Ambil data Ide Bisnis (bagian dari plan)
   getBusinessIdea: (projectId) => {
