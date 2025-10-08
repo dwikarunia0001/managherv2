@@ -1,22 +1,46 @@
-// src/components/PreviewCard.js
-import React from 'react';
+'use client';
 
 export default function PreviewCard({ title, items }) {
+  const isEmpty = !items || items.length === 0 || items.every(item => !item.value || item.value === '-');
+
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-6">
-      <h3 className="font-bold text-lg text-gray-800 mb-4">{title}</h3>
-      {items.length === 0 || items.every(item => !item.value || item.value === '-') ? (
-        <p className="text-gray-500 italic">Belum ada data yang diisi.</p>
-      ) : (
-        <ul className="space-y-2">
-          {items.map((item, i) => (
-            <li key={i} className="flex justify-between py-1 border-b border-gray-100 last:border-b-0">
-              <span className="text-gray-700">{item.label}</span>
-              <span className="font-medium text-gray-900">{item.value}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div
+      className="font-sans"
+      style={{
+        backgroundColor: '#ffffff',
+        borderStyle: 'solid',
+        borderTopWidth: '1px',
+        borderLeftWidth: '1px',
+        borderBottomWidth: '4px',
+        borderRightWidth: '4px',
+        borderColor: '#000000',
+        boxShadow: '4px 4px 0 0 #000000',
+      }}
+    >
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-[#000000] font-sans mb-4">{title}</h3>
+
+        {isEmpty ? (
+          <p className="text-[#000000] text-sm font-sans font-light italic">
+            Belum ada data yang diisi.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {items.map((item, i) => (
+              <li
+                key={i}
+                className="flex justify-between py-1 font-sans"
+                style={{
+                  borderBottom: i < items.length - 1 ? '1px solid #e5e5e5' : 'none',
+                }}
+              >
+                <span className="text-[#000000] text-sm font-sans font-light">{item.label}</span>
+                <span className="text-[#000000] text-sm font-sans font-medium">{item.value}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

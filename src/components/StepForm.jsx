@@ -1,5 +1,4 @@
-// src/components/StepForm.js
-import React from 'react';
+'use client';
 
 export default function StepForm({
   title,
@@ -9,29 +8,62 @@ export default function StepForm({
   onNext,
   isLast = false,
 }) {
+  const isDisabled = !value?.trim();
+
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">{title}</h2>
-      <div className="space-y-4">
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-[#8B0000] outline-none"
-          placeholder={placeholder}
-        />
-        <div className="flex justify-end">
-          <button
-            onClick={onNext}
-            disabled={!value.trim()}
-            className={`px-5 py-2.5 rounded-lg font-medium transition-colors ${
-              value.trim()
-                ? 'bg-[#8B0000] hover:bg-[#6b0000] text-white'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            {isLast ? 'Selesai' : 'Next'}
-          </button>
+    <div
+      className="font-sans"
+      style={{
+        backgroundColor: '#ffffff',
+        borderStyle: 'solid',
+        borderTopWidth: '1px',
+        borderLeftWidth: '1px',
+        borderBottomWidth: '4px',
+        borderRightWidth: '4px',
+        borderColor: '#000000',
+        boxShadow: '4px 4px 0 0 #000000',
+      }}
+    >
+      <div className="p-6">
+        <h2 className="text-xl font-bold text-[#000000] font-sans mb-4">{title}</h2>
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full px-4 py-3 outline-none font-sans"
+            style={{
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+            }}
+          />
+          <div className="flex justify-end">
+            <button
+              onClick={onNext}
+              disabled={isDisabled}
+              className={`px-5 py-2 font-semibold font-sans transition-colors ${
+                isDisabled
+                  ? 'bg-[#f0f0f0] text-[#333333] cursor-not-allowed'
+                  : 'bg-[#b80000] text-white hover:bg-[#8B0000]'
+              }`}
+              style={{
+                borderStyle: 'solid',
+                borderTopWidth: '1px',
+                borderLeftWidth: '1px',
+                borderBottomWidth: '4px',
+                borderRightWidth: '4px',
+                borderColor: '#000000',
+                borderRadius: '0',
+              }}
+            >
+              {isLast ? 'Selesai' : 'Lanjut'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
