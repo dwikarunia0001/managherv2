@@ -103,29 +103,33 @@ export default function BrandPage({ params }) {
       <div className="flex gap-6 mt-6">
         {/* Sidebar Navigasi */}
         <div className="w-64 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <nav className="space-y-2">
+        <nav className="space-y-2">
             {[
-              { id: 'ide-bisnis', label: 'Ide bisnis' },
-              { id: 'pricing', label: 'Pricing' },
-              { id: 'brand', label: 'Brand Identity' },
-              { id: 'validasi', label: 'Validasi' },
-              { id: 'bmc', label: 'BMC' },
+            { id: 'ide-bisnis', label: 'Ide bisnis' },
+            { id: 'pricing', label: 'Pricing' },
+            { id: 'brand', label: 'Brand Identity' },
+            { id: 'validasi', label: 'Validasi' },
+            { id: 'bmc', label: 'BMC' },
             ].map((item) => (
-              <button
+            <button
                 key={item.id}
                 onClick={() => {
-                  router.push(`/dashboard/${projectId}/plan/${item.id}`);
+                if (item.id === 'ide-bisnis') {
+                    router.push(`/dashboard/${projectId}/plan`);
+                } else {
+                    router.push(`/dashboard/${projectId}/plan/${item.id}`);
+                }
                 }}
                 className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${
-                  item.id === 'brand'
+                item.id === 'brand'
                     ? 'bg-[#8B0000] text-white'
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
-              >
+            >
                 {item.label}
-              </button>
+            </button>
             ))}
-          </nav>
+        </nav>
         </div>
 
         {/* Konten Utama */}

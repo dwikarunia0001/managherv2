@@ -104,17 +104,16 @@ export default function PricingPage({ params }) {
             {[
               { id: 'ide-bisnis', label: 'Ide bisnis' },
               { id: 'pricing', label: 'Pricing' },
-              { id: 'brand', label: 'Brand' },
+              { id: 'brand', label: 'Brand Identity' },
               { id: 'validasi', label: 'Validasi' },
               { id: 'bmc', label: 'BMC' },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
-                  if (item.id === 'pricing') {
-                    setCurrentStep(0);
+                  if (item.id === 'ide-bisnis') {
+                    router.push(`/dashboard/${projectId}/plan`);
                   } else {
-                    // Redirect ke halaman lain
                     router.push(`/dashboard/${projectId}/plan/${item.id}`);
                   }
                 }}
