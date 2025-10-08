@@ -1,14 +1,14 @@
 // src/app/dashboard/[projectId]/page.js
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
 import Sidebar from '@/components/Sidebar';
 import PhaseCard from '@/components/PhaseCard';
 
 export default function DashboardPage({ params }) {
-  const { projectId } = params;
+  const { projectId } = use(params);
   const router = useRouter();
   const { currentProject, setCurrentProject } = useProjectStore();
   const [activeTab, setActiveTab] = useState('dashboard');

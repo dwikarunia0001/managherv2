@@ -1,7 +1,7 @@
 // src/app/dashboard/[projectId]/scale-up/page.js
 'use client';
 
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import useProjectStore from '@/store/useProjectStore';
 import ChecklistForm from '@/components/ChecklistForm';
 
@@ -14,7 +14,7 @@ const SCALE_UP_ITEMS = [
 ];
 
 export default function ScaleUpPage({ params }) {
-  const { projectId } = params;
+  const { projectId } = use(params);
   const { currentProject, setCurrentProject } = useProjectStore();
 
   useEffect(() => {

@@ -1,12 +1,12 @@
 // src/app/dashboard/[projectId]/sell/page.js
 'use client';
 
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import useProjectStore from '@/store/useProjectStore';
 import MiniErpForm from '@/components/MiniErpForm';
 
 export default function SellPage({ params }) {
-  const { projectId } = params;
+  const { projectId } = use(params);
   const { currentProject, setCurrentProject } = useProjectStore();
 
   useEffect(() => {
