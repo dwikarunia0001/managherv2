@@ -35,7 +35,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-sm shadow-sm py-4">
         <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <img src="/managher-red-shoes-logo.png" alt="ManagHer Logo" className="h-12 w-auto" />
+            <img src="/only-shoes-logo-removebg.png" alt="ManagHer Logo" className="h-12 w-auto" />
             <span className="text-xl font-bold text-black">ManagHer</span>
           </div>
           <div className="hidden md:flex space-x-8">
@@ -78,7 +78,7 @@ export default function Home() {
         <div className="absolute bottom-60 right-40 text-xl text-[#8B0000] opacity-70 sparkle sparkle-2">✦</div>
 
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <img src="/managher-red-shoes-logo.png" alt="ManagHer Logo" className="mx-auto h-32 mb-6" />
+          <img src="/only-shoes-logo-removebg.png" alt="ManagHer Logo" className="mx-auto h-32 mb-6" />
 
           {/* Slogan "From Zero to CEO" dengan gaya font Kanroji */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6">
@@ -109,11 +109,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section — bg-gray-50 (like original) */}
       <section id="about" className="py-20 px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#8B0000]">Tentang ManagHer</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#C51D28]">Tentang ManagHer</h2>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
               Kami hadir untuk perempuan solopreneur yang ingin membangun bisnis dengan pendekatan yang terstruktur, berkelas, dan penuh makna — bukan hanya tentang uang, tapi tentang kekuatan, identitas, dan transformasi diri.
             </p>
@@ -126,10 +126,10 @@ export default function Home() {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#8B0000] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1"
+                className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#C51D28] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1"
               >
-                <div className="w-16 h-16 bg-[#f5f5f5] rounded-full flex items-center justify-center mb-6 mx-auto">
-                  <i className={`fas ${item.icon} text-2xl text-[#8B0000]`}></i>
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                  <i className={`fas ${item.icon} text-2xl text-[#C51D28]`}></i>
                 </div>
                 <h3 className="text-xl font-bold mb-4 text-center">{item.title}</h3>
                 <p className="text-gray-700 text-center">{item.desc}</p>
@@ -139,11 +139,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Phases Section — Ganti "Features" jadi "Fase" */}
-      <section id="phases" className="py-20 px-6">
+      {/* Phases Section — bg-white */}
+      <section id="phases" className="py-20 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#8B0000]">Tiga Fase Perjalananmu ✨</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#C51D28]">Tiga Fase Perjalananmu ✨</h2>
             <p className="text-gray-700 max-w-2xl mx-auto">
               Ikuti alur yang telah teruji untuk membangun bisnis yang berkelanjutan — dari ide hingga ekspansi.
             </p>
@@ -151,7 +151,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Fase Plan */}
-            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#8B0000] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 shimmer">
+            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#C51D28] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
               <div className="text-4xl mb-4">💡</div>
               <h3 className="text-xl font-bold mb-3">Fase Plan</h3>
               <p className="text-gray-700 text-sm mb-4">
@@ -166,7 +166,7 @@ export default function Home() {
             </div>
 
             {/* Fase Sell */}
-            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#8B0000] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 shimmer">
+            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#C51D28] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
               <div className="text-4xl mb-4">🚀</div>
               <h3 className="text-xl font-bold mb-3">Fase Sell</h3>
               <p className="text-gray-700 text-sm mb-4">
@@ -181,7 +181,7 @@ export default function Home() {
             </div>
 
             {/* Fase Scale Up */}
-            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#8B0000] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1 shimmer">
+            <div className="bg-white p-8 rounded-2xl shadow-md border-t-4 border-[#C51D28] hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
               <div className="text-4xl mb-4">📈</div>
               <h3 className="text-xl font-bold mb-3">Fase Scale Up</h3>
               <p className="text-gray-700 text-sm mb-4">
@@ -198,167 +198,142 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Badges Section */}
-      <section id="badges" className="py-20 px-6 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#8B0000]">Koleksi Badge 🏅</h2>
-            <p className="text-gray-700 max-w-2xl mx-auto">Raih pencapaian di setiap tahap perjalananmu dan banggakan prestasimu!</p>
-          </div>
-          
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-            {[
-              { icon: '💭', title: 'Dreamer', desc: 'Untukmu yang berani bermimpi dan memiliki visi besar', step: 'Tahap 1: Ide Bisnis' },
-              { icon: '🔎', title: 'Researcher', desc: 'Untukmu yang teliti dan suka menggali informasi mendalam', step: 'Tahap 2: Validasi Ide' },
-              { icon: '🎨', title: 'Creator', desc: 'Untukmu yang kreatif dan mampu mewujudkan ide menjadi nyata', step: 'Tahap 3: Prototype & Brand' },
-              { icon: '👑', title: 'Boss Lady', desc: 'Untukmu yang berani mengambil keputusan dan memimpin bisnis sendiri', step: 'Tahap 4: Launch & Grow' },
-              { icon: '📊', title: 'Strategist', desc: 'Untukmu yang sudah siap mengembangkan bisnis', step: 'Tahap 5: Business Model Canvas' }
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="badge-item p-6 rounded-2xl bg-white shadow-md text-center transform transition-all duration-300 hover:shadow-lg"
-              >
-                <div className="w-20 h-20 mx-auto mb-4 bg-[#8B0000] rounded-full flex items-center justify-center text-2xl text-white">
-                  {item.icon}
-                </div>
-                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-700">{item.desc}</p>
-                <div className="mt-4 text-xs text-[#8B0000] font-medium">{item.step}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 px-6">
+      {/* Testimonials Section — bg-white, updated content */}
+      <section id="testimonials" className="py-20 px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#8B0000]">Apa Kata Mereka 💖</h2>
-            <p className="text-gray-700 max-w-2xl mx-auto">Dengarkan kisah inspiratif dari para solopreneur yang telah memulai perjalanan mereka</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#C51D28]">Apa Kata Mereka 💖</h2>
+            <p className="text-gray-700 max-w-2xl mx-auto">Kisah nyata dari solopreneur yang telah melewati tiap fase perjalanan.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-md card-hover">
-              <blockquote className="text-lg italic font-medium text-gray-800">
-                "Sebagai ibu rumah tangga, saya selalu ingin punya bisnis sendiri tapi tidak tahu harus mulai dari mana. ManagHer memberikan panduan step-by-step yang mudah diikuti. Sekarang saya sudah punya online shop sendiri!"
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimoni Fase Plan */}
+            <div className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-[#C51D28] rounded-full flex items-center justify-center text-white font-bold mb-4">AR</div>
+              <blockquote className="text-sm italic font-medium text-gray-800 mb-4">
+                "Fase Plan membantuku menggali passion jadi ide bisnis yang profitable. Akhirnya punya arah jelas!"
               </blockquote>
-              <div className="mt-6 flex items-center">
-                <div className="w-12 h-12 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-bold mr-4">RS</div>
-                <div>
-                  <p className="font-semibold">Rina S.</p>
-                  <p className="text-sm text-gray-600">Pemilik Toko Kue Online</p>
-                </div>
-              </div>
+              <div className="text-xs text-[#C51D28] font-semibold">Fase Plan • Anindya R.</div>
             </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-md card-hover">
-              <blockquote className="text-lg italic font-medium text-gray-800">
-                "Platform ini benar-benar mengubah cara saya berpikir tentang bisnis. Dari yang awalnya hanya ide biasa, sekarang saya punya produk digital yang laku di pasaran. Terima kasih ManagHer!"
+
+            {/* Testimoni Fase Sell */}
+            <div className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-[#C51D28] rounded-full flex items-center justify-center text-white font-bold mb-4">KL</div>
+              <blockquote className="text-sm italic font-medium text-gray-800 mb-4">
+                "Dulu kewalahan urus order manual. Di Fase Sell, aku belajar sistem penjualan otomatis — sekarang bisa fokus kreatif!"
               </blockquote>
-              <div className="mt-6 flex items-center">
-                <div className="w-12 h-12 bg-[#8B0000] rounded-full flex items-center justify-center text-white font-bold mr-4">DA</div>
-                <div>
-                  <p className="font-semibold">Dewi A.</p>
-                  <p className="text-sm text-gray-600">Pembuat Template Digital</p>
-                </div>
-              </div>
+              <div className="text-xs text-[#C51D28] font-semibold">Fase Sell • Karina L.</div>
+            </div>
+
+            {/* Testimoni Fase Scale Up */}
+            <div className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-[#C51D28] rounded-full flex items-center justify-center text-white font-bold mb-4">SN</div>
+              <blockquote className="text-sm italic font-medium text-gray-800 mb-4">
+                "Scale Up ngajarin aku bangun tim dan SOP. Sekarang bisnisku bisa jalan tanpa aku harus selalu standby!"
+              </blockquote>
+              <div className="text-xs text-[#C51D28] font-semibold">Fase Scale Up • Sari N.</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section — bg-gray-50, 3 cards per phase */}
       <section className="py-20 px-6 text-center bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 card-hover">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Siap Memulai Perjalananmu?</h2>
-            <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-              Gabung sekarang dan dapatkan akses ke semua fitur, template, dan panduan eksklusif untuk membangun bisnis impianmu!
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <a href="/dashboard" className="bg-[#8B0000] hover:bg-[#6b0000] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:opacity-90 transition-all">
-                <span>Mulai Sekarang 🚀</span>
-              </a>
-              <a href="#features" className="border-2 border-gray-400 hover:border-[#8B0000] px-8 py-4 rounded-full font-semibold text-lg transition-all hover:shadow-md">
-                Lihat Demo
-              </a>
-            </div>
-            
-            <div className="flex justify-center items-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-lock text-green-600"></i>
-                <span>100% Aman</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-undo text-blue-600"></i>
-                <span>30 Hari Garansi Uang Kembali</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-headset text-purple-600"></i>
-                <span>Support 24/7</span>
-              </div>
-            </div>
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#C51D28]">Siap Mulai Fase Kamu?</h2>
+          <p className="text-lg text-gray-700 mb-12 max-w-2xl mx-auto">
+            Pilih fase yang sesuai dengan perjalananmu sekarang — dan mulai bangun bisnismu dengan percaya diri.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Card Plan */}
+            <a
+              href="/plan"
+              className="group bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col items-center"
+            >
+              <div className="text-4xl mb-4">💡</div>
+              <h3 className="text-xl font-bold mb-2">Fase Plan</h3>
+              <p className="text-sm text-gray-700">Temukan ide & bangun fondasi bisnis.</p>
+            </a>
+
+            {/* Card Sell */}
+            <a
+              href="/sell"
+              className="group bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col items-center"
+            >
+              <div className="text-4xl mb-4">🚀</div>
+              <h3 className="text-xl font-bold mb-2">Fase Sell</h3>
+              <p className="text-sm text-gray-700">Kelola penjualan & operasional harian.</p>
+            </a>
+
+            {/* Card Scale Up */}
+            <a
+              href="/scale"
+              className="group bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 flex flex-col items-center"
+            >
+              <div className="text-4xl mb-4">📈</div>
+              <h3 className="text-xl font-bold mb-2">Fase Scale Up</h3>
+              <p className="text-sm text-gray-700">Bangun sistem & ekspansi bisnis.</p>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 bg-black text-white">
+      {/* Footer — bg-white */}
+      <footer className="py-12 px-6 bg-gray-50 text-gray-800 border-t border-gray-200">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <img src="/managher-red-shoes-logo.png" alt="ManagHer Logo" className="h-8 w-auto" />
-                <h3 className="text-xl font-bold">ManagHer</h3>
+                <h3 className="text-xl font-bold text-[#C51D28]">ManagHer</h3>
               </div>
-              <p className="text-gray-400 mb-4">Platform interaktif untuk perempuan solopreneur membangun bisnis dari 0.</p>
+              <p className="text-gray-600 mb-4">Platform interaktif untuk perempuan solopreneur membangun bisnis dari 0.</p>
               <div className="flex space-x-4">
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B0000] transition-colors">
-                  <i className="fab fa-instagram text-sm text-white"></i>
+                <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#C51D28] hover:text-white transition-colors">
+                  <i className="fab fa-instagram text-sm text-gray-800"></i>
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B0000] transition-colors">
-                  <i className="fab fa-twitter text-sm text-white"></i>
+                <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#C51D28] hover:text-white transition-colors">
+                  <i className="fab fa-twitter text-sm text-gray-800"></i>
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8B0000] transition-colors">
-                  <i className="fab fa-tiktok text-sm text-white"></i>
+                <a href="#" className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-[#C51D28] hover:text-white transition-colors">
+                  <i className="fab fa-tiktok text-sm text-gray-800"></i>
                 </a>
               </div>
             </div>
             
             <div>
-              <h4 className="font-bold mb-4">Produk</h4>
+              <h4 className="font-bold mb-4 text-[#C51D28]">Produk</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Fitur</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Harga</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Demo</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Testimoni</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Fitur</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Harga</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Demo</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Testimoni</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-bold mb-4">Sumber Daya</h4>
+              <h4 className="font-bold mb-4 text-[#C51D28]">Sumber Daya</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Panduan</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Webinar</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Komunitas</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Panduan</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Webinar</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Komunitas</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-bold mb-4">Perusahaan</h4>
+              <h4 className="font-bold mb-4 text-[#C51D28]">Perusahaan</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Tentang Kami</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Karir</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Kontak</a></li>
-                <li><a href="#" className="hover:text-[#8B0000] transition-colors">Privasi</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Tentang Kami</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Karir</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Kontak</a></li>
+                <li><a href="#" className="hover:text-[#C51D28] transition-colors">Privasi</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+          <div className="pt-8 border-t border-gray-200 text-center text-gray-500 text-sm">
             <p>© 2025 ManagHer — Solopreneur Journey. All rights reserved.</p>
           </div>
         </div>
