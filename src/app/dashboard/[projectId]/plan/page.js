@@ -4,39 +4,16 @@ import { use } from 'react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
-import StepForm from '@/components/StepForm';
-import PreviewCard from '@/components/PreviewCard';
 
 // Langkah-langkah ide bisnis
 const STEPS = [
-  {
-    key: 'idea',
-    title: 'Masukkan ide bisnis',
-    placeholder: 'Contoh: Kafe dengan konsep vintage',
-  },
-  {
-    key: 'type',
-    title: 'Masukkan jenis bisnis',
-    placeholder: 'Contoh: F&B / Retail / Jasa',
-  },
-  {
-    key: 'target',
-    title: 'Masukkan target pasar',
-    placeholder: 'Contoh: Mahasiswa, ibu rumah tangga, profesional muda',
-  },
-  {
-    key: 'product',
-    title: 'Produk yang akan dijual',
-    placeholder: 'Contoh: Kopi, kue, merchandise',
-  },
-  {
-    key: 'capital',
-    title: 'Modal yang dibutuhkan',
-    placeholder: 'Contoh: Rp 5.000.000',
-  },
+  { key: 'idea', label: 'Ide Bisnis' },
+  { key: 'type', label: 'Jenis Bisnis' },
+  { key: 'target', label: 'Target Pasar' },
+  { key: 'product', label: 'Produk' },
+  { key: 'capital', label: 'Modal' },
 ];
 
-// Sidebar menu (statis)
 const SIDEBAR_MENU = [
   { id: 'ide-bisnis', label: 'Ide bisnis' },
   { id: 'pricing', label: 'Pricing' },
@@ -45,13 +22,21 @@ const SIDEBAR_MENU = [
   { id: 'bmc', label: 'BMC' },
 ];
 
+const PLACEHOLDERS = {
+  idea: 'Contoh: Kafe dengan konsep vintage',
+  type: 'Contoh: F&B / Retail / Jasa',
+  target: 'Contoh: Mahasiswa, ibu rumah tangga, profesional muda',
+  product: 'Contoh: Kopi, kue, merchandise',
+  capital: 'Contoh: Rp 5.000.000',
+};
+
 export default function PlanPage({ params }) {
   const { projectId } = use(params);
   const router = useRouter();
-  const { currentProject, setCurrentProject, getPhaseData, updatePhaseData } =
+  const { currentProject, setCurrentProject, getPhaseData, updatePhaseData, deletePhaseData } =
     useProjectStore();
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState({
     idea: '',
     type: '',
@@ -63,54 +48,92 @@ export default function PlanPage({ params }) {
   useEffect(() => {
     setCurrentProject(projectId);
     const saved = getPhaseData(projectId, 'businessIdea') || {};
-    if (Object.keys(saved).length > 0) {
-      setFormData(saved);
-      const filledSteps = STEPS.filter((step) => saved[step.key]);
-      if (filledSteps.length > 0) {
-        setCurrentStep(filledSteps.length < STEPS.length ? filledSteps.length : STEPS.length - 1);
-      }
-    }
+    setFormData({
+      idea: saved.idea || '',
+      type: saved.type || '',
+      target: saved.target || '',
+      product: saved.product || '',
+      capital: saved.capital || '',
+    });
   }, [projectId, setCurrentProject, getPhaseData]);
 
-  const handleNext = () => {
-    const currentKey = STEPS[currentStep].key;
-    const currentValue = formData[currentKey];
+  const currentStep = STEPS[currentStepIndex];
+  const currentValue = formData[currentStep.key];
 
+  const handleChange = (value) => {
+    setFormData((prev) => ({ ...prev, [currentStep.key]: value }));
+  };
+
+  const handleSaveCurrent = () => {
+    updatePhaseData(projectId, 'businessIdea', {
+      [currentStep.key]: currentValue,
+    });
+  };
+
+  const handleNext = () => {
     if (!currentValue.trim()) {
       alert('Harap isi field terlebih dahulu.');
       return;
     }
-
-    updatePhaseData(projectId, 'businessIdea', {
-      [currentKey]: currentValue,
-    });
-
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      alert('✅ Ide bisnis berhasil disimpan!');
+    handleSaveCurrent();
+    if (currentStepIndex < STEPS.length - 1) {
+      setCurrentStepIndex(currentStepIndex + 1);
     }
   };
 
-  const handleChange = (value) => {
-    const currentKey = STEPS[currentStep].key;
-    setFormData((prev) => ({ ...prev, [currentKey]: value }));
+  const handlePrev = () => {
+    if (currentStepIndex > 0) {
+      handleSaveCurrent();
+      setCurrentStepIndex(currentStepIndex - 1);
+    }
   };
 
-  const current = STEPS[currentStep];
+  const handleFinish = () => {
+    if (!currentValue.trim()) {
+      alert('Harap isi field terlebih dahulu.');
+      return;
+    }
+    // Simpan semua data
+    updatePhaseData(projectId, 'businessIdea', {
+      idea: formData.idea,
+      type: formData.type,
+      target: formData.target,
+      product: formData.product,
+      capital: formData.capital,
+    });
+    alert('✅ Ide bisnis berhasil disimpan!');
+  };
 
-  const businessIdeaData = getPhaseData(projectId, 'businessIdea');
+  const handleReset = () => {
+    if (confirm('Yakin ingin menghapus semua data ide bisnis?')) {
+      deletePhaseData(projectId, 'businessIdea');
+      setFormData({
+        idea: '',
+        type: '',
+        target: '',
+        product: '',
+        capital: '',
+      });
+      setCurrentStepIndex(0);
+    }
+  };
+
+  const handleEdit = () => {
+    setCurrentStepIndex(0);
+  };
+
+  // Preview selalu tampil
   const previewItems = [
-    { label: 'Ide Bisnis', value: businessIdeaData.idea || '-' },
-    { label: 'Jenis Bisnis', value: businessIdeaData.type || '-' },
-    { label: 'Target Pasar', value: businessIdeaData.target || '-' },
-    { label: 'Produk', value: businessIdeaData.product || '-' },
-    { label: 'Modal', value: businessIdeaData.capital || '-' },
+    { key: 'idea', label: 'Ide Bisnis', value: formData.idea || '-' },
+    { key: 'type', label: 'Jenis Bisnis', value: formData.type || '-' },
+    { key: 'target', label: 'Target Pasar', value: formData.target || '-' },
+    { key: 'product', label: 'Produk', value: formData.product || '-' },
+    { key: 'capital', label: 'Modal', value: formData.capital || '-' },
   ];
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-4 sm:p-6">
-      {/* Header + Breadcrumb */}
+      {/* Header */}
       <header className="mb-8">
         <div
           className="p-5 font-sans"
@@ -146,14 +169,14 @@ export default function PlanPage({ params }) {
                 borderColor: '#000000',
               }}
             >
-              ← Kembali ke Dashboard
+              ← Dashboard
             </button>
           </div>
         </div>
       </header>
 
       <div className="flex gap-6 flex-col lg:flex-row">
-        {/* Sidebar — DIPERBARUI */}
+        {/* Sidebar Navigasi Utama */}
         <div
           className="w-full lg:w-64"
           style={{
@@ -179,10 +202,7 @@ export default function PlanPage({ params }) {
                     ? 'bg-[#b80000] text-white'
                     : 'text-[#000000] hover:bg-[#ffcccc]'
                 }`}
-                style={{
-                  borderRadius: '0',
-                  textAlign: 'left',
-                }}
+                style={{ borderRadius: '0', textAlign: 'left' }}
               >
                 <span>•</span>
                 <span>{item.label}</span>
@@ -193,10 +213,11 @@ export default function PlanPage({ params }) {
 
         {/* Konten Utama */}
         <div className="flex-1 space-y-6">
-          {/* Step Form */}
+          {/* Card: Navigasi Langkah + Input Form */}
           <div
-            className="p-6 font-sans"
+            className="font-sans"
             style={{
+              backgroundColor: '#ffffff',
               borderStyle: 'solid',
               borderTopWidth: '1px',
               borderLeftWidth: '1px',
@@ -204,23 +225,94 @@ export default function PlanPage({ params }) {
               borderRightWidth: '4px',
               borderColor: '#000000',
               boxShadow: '4px 4px 0 0 #000000',
-              backgroundColor: '#ffffff',
             }}
           >
-            <StepForm
-              title={current.title}
-              placeholder={current.placeholder}
-              value={formData[current.key]}
-              onChange={handleChange}
-              onNext={handleNext}
-              isLast={currentStep === STEPS.length - 1}
-            />
+            <div className="p-6">
+              {/* Navigasi Langkah */}
+              <div className="mb-6">
+                <h3 className="font-bold text-[#000000] mb-3">Langkah Ide Bisnis</h3>
+                <div className="flex flex-wrap gap-2">
+                  {STEPS.map((step, index) => (
+                    <button
+                      key={step.key}
+                      onClick={() => setCurrentStepIndex(index)}
+                      className={`px-3 py-1 text-sm font-sans transition-colors ${
+                        index === currentStepIndex
+                          ? 'bg-[#b80000] text-white'
+                          : 'bg-[#ffcccc] text-[#000000] hover:bg-[#ffa8a8]'
+                      }`}
+                      style={{ borderRadius: '0' }}
+                    >
+                      {step.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Input Form */}
+              <div>
+                <h2 className="text-xl font-bold text-[#000000] mb-4">{currentStep.label}</h2>
+                <input
+                  type="text"
+                  value={currentValue ?? ''}
+                  onChange={(e) => handleChange(e.target.value)}
+                  placeholder={PLACEHOLDERS[currentStep.key]}
+                  className="w-full px-4 py-3 outline-none font-sans mb-6"
+                  style={{
+                    borderStyle: 'solid',
+                    borderTopWidth: '1px',
+                    borderLeftWidth: '1px',
+                    borderBottomWidth: '4px',
+                    borderRightWidth: '4px',
+                    borderColor: '#000000',
+                  }}
+                />
+                <div className="flex justify-between">
+                  <button
+                    onClick={handlePrev}
+                    disabled={currentStepIndex === 0}
+                    className={`px-4 py-2 font-semibold font-sans ${
+                      currentStepIndex === 0
+                        ? 'bg-[#f0f0f0] text-[#333333] cursor-not-allowed'
+                        : 'bg-[#ffcccc] text-[#000000] hover:bg-[#ffa8a8]'
+                    }`}
+                    style={{
+                      borderStyle: 'solid',
+                      borderTopWidth: '1px',
+                      borderLeftWidth: '1px',
+                      borderBottomWidth: '4px',
+                      borderRightWidth: '4px',
+                      borderColor: '#000000',
+                      borderRadius: '0',
+                    }}
+                  >
+                    ← Prev
+                  </button>
+                  <button
+                    onClick={currentStepIndex === STEPS.length - 1 ? handleFinish : handleNext}
+                    className="bg-[#b80000] text-white px-4 py-2 font-semibold font-sans hover:bg-[#8B0000]"
+                    style={{
+                      borderStyle: 'solid',
+                      borderTopWidth: '1px',
+                      borderLeftWidth: '1px',
+                      borderBottomWidth: '4px',
+                      borderRightWidth: '4px',
+                      borderColor: '#000000',
+                      borderRadius: '0',
+                    }}
+                  >
+                    {currentStepIndex === STEPS.length - 1 ? 'Selesai' : 'Next →'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Preview Card */}
           <div
-            className="p-6 font-sans"
+            className="font-sans"
             style={{
+              backgroundColor: '#ffffff',
               borderStyle: 'solid',
               borderTopWidth: '1px',
               borderLeftWidth: '1px',
@@ -228,13 +320,55 @@ export default function PlanPage({ params }) {
               borderRightWidth: '4px',
               borderColor: '#000000',
               boxShadow: '4px 4px 0 0 #000000',
-              backgroundColor: '#ffffff',
             }}
           >
-            <PreviewCard
-              title="Preview Ide Bisnis"
-              items={previewItems}
-            />
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-[#000000] mb-4">Preview Ide Bisnis</h3>
+              <ul className="space-y-2 mb-6">
+                {previewItems.map((item) => (
+                  <li
+                    key={item.key}
+                    className="flex justify-between py-1 font-sans"
+                    style={{ borderBottom: '1px solid #e5e5e5' }}
+                  >
+                    <span className="text-[#000000] text-sm font-sans font-light">{item.label}</span>
+                    <span className="text-[#000000] text-sm font-sans font-medium">{item.value}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleEdit}
+                  className="flex-1 bg-[#b80000] text-white px-3 py-2 font-semibold font-sans hover:bg-[#8B0000]"
+                  style={{
+                    borderStyle: 'solid',
+                    borderTopWidth: '1px',
+                    borderLeftWidth: '1px',
+                    borderBottomWidth: '4px',
+                    borderRightWidth: '4px',
+                    borderColor: '#000000',
+                    borderRadius: '0',
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="flex-1 bg-[#ffcccc] text-[#000000] px-3 py-2 font-semibold font-sans hover:bg-[#ffa8a8]"
+                  style={{
+                    borderStyle: 'solid',
+                    borderTopWidth: '1px',
+                    borderLeftWidth: '1px',
+                    borderBottomWidth: '4px',
+                    borderRightWidth: '4px',
+                    borderColor: '#000000',
+                    borderRadius: '0',
+                  }}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
