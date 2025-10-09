@@ -1,83 +1,84 @@
-// src/app/dashboard/[projectId]/plan/bmc/page.js
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
 
+// Palet warna pastel
+const NOTE_COLORS = [
+  '#ffcccc', '#ccffcc', '#ccccff', '#ffffcc',
+  '#ffccff', '#ccffff', '#ffe0cc', '#e0ccff'
+];
+
+// Data BMC dengan penjelasan & contoh
 const BMC_BLOCKS = [
   {
     id: 'keyPartners',
     title: 'Key Partners',
-    subtitle: 'What are your key partners to get competitive advantage?',
-    color: 'bg-yellow-100',
-    placeholder: 'Contoh: Supplier bahan baku, platform pengiriman',
+    description: 'Siapa mitra strategis Anda?',
+    example: 'Supplier bahan baku, platform logistik'
   },
   {
     id: 'keyActivities',
     title: 'Key Activities',
-    subtitle: 'What are the key steps to move ahead to your customers?',
-    color: 'bg-blue-100',
-    placeholder: 'Contoh: Produksi, pemasaran, layanan pelanggan',
+    description: 'Aktivitas utama untuk menjalankan bisnis?',
+    example: 'Produksi, pemasaran, layanan pelanggan'
   },
   {
     id: 'keyPropositions',
     title: 'Key Propositions',
-    subtitle: 'How will you make your customers’ life happier?',
-    color: 'bg-yellow-200',
-    placeholder: 'Contoh: Harga terjangkau, desain unik, layanan cepat',
+    description: 'Nilai unik yang Anda tawarkan?',
+    example: 'Harga terjangkau, desain eksklusif'
   },
   {
     id: 'customerRelationships',
     title: 'Customer Relationships',
-    subtitle: 'How often will you interact with your customers?',
-    color: 'bg-blue-200',
-    placeholder: 'Contoh: Chatbot, email newsletter, telepon langsung',
+    description: 'Bagaimana Anda berinteraksi dengan pelanggan?',
+    example: 'Chat responsif, program loyalitas'
   },
   {
     id: 'customerSegments',
     title: 'Customer Segments',
-    subtitle: 'Who are your customers? Describe your target audience in a couple of words.',
-    color: 'bg-pink-100',
-    placeholder: 'Contoh: Ibu rumah tangga, mahasiswa, profesional muda',
+    description: 'Siapa target pelanggan Anda?',
+    example: 'Mahasiswa, ibu rumah tangga, UMKM'
   },
   {
     id: 'keyResources',
     title: 'Key Resources',
-    subtitle: 'What resources do you need to make your idea work?',
-    color: 'bg-purple-100',
-    placeholder: 'Contoh: Tim kreatif, modal awal, teknologi',
+    description: 'Sumber daya utama yang dibutuhkan?',
+    example: 'Tim kreatif, modal awal, teknologi'
   },
   {
     id: 'channels',
     title: 'Channels',
-    subtitle: 'How are you going to reach your customers?',
-    color: 'bg-blue-300',
-    placeholder: 'Contoh: Instagram, Tokopedia, WhatsApp',
+    description: 'Bagaimana Anda menjangkau pelanggan?',
+    example: 'Instagram, Tokopedia, WhatsApp'
   },
   {
     id: 'costStructure',
     title: 'Cost Structure',
-    subtitle: 'How much are you planning to spend on the product development and marketing for a certain period?',
-    color: 'bg-orange-100',
-    placeholder: 'Contoh: Rp 5.000.000 untuk produksi, Rp 2.000.000 untuk iklan',
+    description: 'Apa saja biaya utama bisnis Anda?',
+    example: 'Produksi, iklan, gaji karyawan'
   },
   {
     id: 'revenueStreams',
     title: 'Revenue Streams',
-    subtitle: 'How much are you planning to earn in a certain period? Compare your costs and revenues.',
-    color: 'bg-orange-200',
-    placeholder: 'Contoh: Penjualan produk Rp 10.000.000/bulan, langganan Rp 500.000/bulan',
+    description: 'Dari mana Anda mendapat penghasilan?',
+    example: 'Penjualan produk, langganan bulanan'
   },
 ];
 
 export default function BmcPage({ params }) {
   const { projectId } = use(params);
   const router = useRouter();
-  const { currentProject, setCurrentProject, getPhaseData, updatePhaseData } =
+  const { currentProject, setCurrentProject, getPhaseData, updatePhaseData, deletePhaseData } =
     useProjectStore();
 
   const [bmcData, setBmcData] = useState({});
+  const [noteContent, setNoteContent] = useState('');
+  const [noteColor, setNoteColor] = useState(NOTE_COLORS[0]);
+  const [previewNote, setPreviewNote] = useState(null); // Note yang siap diseret
+  const dragItem = useRef(null);
 
   useEffect(() => {
     setCurrentProject(projectId);
@@ -85,15 +86,31 @@ export default function BmcPage({ params }) {
     setBmcData(saved);
   }, [projectId, setCurrentProject, getPhaseData]);
 
-  const handleChange = (id, value) => {
-    const newData = { ...bmcData, [id]: value };
+  const saveBmcData = (newData) => {
     setBmcData(newData);
     updatePhaseData(projectId, 'bmc', newData);
   };
 
-  // === Drag & Drop Handlers ===
-  const handleDragStart = (e, id) => {
-    e.dataTransfer.setData('text/plain', id);
+  // Buat note (tapi belum simpan ke blok)
+  const handleCreateNote = () => {
+    if (!noteContent.trim()) {
+      alert('Isi catatan terlebih dahulu.');
+      return;
+    }
+    const note = {
+      id: Date.now().toString(),
+      content: noteContent.trim(),
+      color: noteColor,
+    };
+    setPreviewNote(note);
+    setNoteContent('');
+  };
+
+  // Drag & Drop
+  const handleDragStart = (e) => {
+    if (!previewNote) return;
+    dragItem.current = previewNote;
+    e.dataTransfer.setData('text/plain', JSON.stringify(previewNote));
     e.dataTransfer.effectAllowed = 'move';
   };
 
@@ -104,93 +121,321 @@ export default function BmcPage({ params }) {
 
   const handleDrop = (e, targetId) => {
     e.preventDefault();
-    const sourceId = e.dataTransfer.getData('text/plain');
+    const data = e.dataTransfer.getData('text/plain');
+    if (!data) return;
 
-    if (!sourceId || sourceId === targetId) return;
-
-    const sourceValue = bmcData[sourceId] || '';
-    if (!sourceValue.trim()) return; // Jangan pindahkan jika kosong
-
-    // Pindahkan: hapus dari sumber, masukkan ke target
-    const newBmcData = { ...bmcData };
-    newBmcData[targetId] = sourceValue;
-    newBmcData[sourceId] = ''; // Kosongkan sumber
-
-    setBmcData(newBmcData);
-    updatePhaseData(projectId, 'bmc', newBmcData);
+    try {
+      const note = JSON.parse(data);
+      const newData = { ...bmcData };
+      if (!newData[targetId]) newData[targetId] = [];
+      newData[targetId].push(note);
+      saveBmcData(newData);
+      setPreviewNote(null); // Hapus preview setelah disimpan
+      dragItem.current = null;
+    } catch (err) {
+      console.error('Gagal parse note:', err);
+    }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">
-        Manajer / Mini Business Plan
-      </h1>
+  const handleDeleteNote = (blockId, noteId) => {
+    if (confirm('Hapus note ini?')) {
+      const newData = { ...bmcData };
+      newData[blockId] = (newData[blockId] || []).filter(note => note.id !== noteId);
+      if (newData[blockId].length === 0) delete newData[blockId];
+      saveBmcData(newData);
+    }
+  };
 
-      <div className="flex gap-6 mt-6">
-        {/* Sidebar */}
-        <div className="w-64 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <nav className="space-y-2">
-            {[
-            { id: 'ide-bisnis', label: 'Ide bisnis' },
-            { id: 'pricing', label: 'Pricing' },
-            { id: 'brand', label: 'Brand Identity' },
-            { id: 'validasi', label: 'Validasi' },
-            { id: 'bmc', label: 'BMC' },
-            ].map((item) => (
+  const handleResetAll = () => {
+    if (confirm('Yakin ingin menghapus seluruh data BMC?')) {
+      deletePhaseData(projectId, 'bmc');
+      setBmcData({});
+      setPreviewNote(null);
+    }
+  };
+
+  const SIDEBAR_MENU = [
+    { id: 'ide-bisnis', label: 'Ide bisnis' },
+    { id: 'pricing', label: 'Pricing' },
+    { id: 'brand', label: 'Brand Identity' },
+    { id: 'validasi', label: 'Validasi' },
+    { id: 'bmc', label: 'BMC' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#ffffff] p-4 sm:p-6">
+      {/* Header */}
+      <header className="mb-8">
+        <div
+          className="p-5 font-sans"
+          style={{
+            borderStyle: 'solid',
+            borderTopWidth: '1px',
+            borderLeftWidth: '1px',
+            borderBottomWidth: '4px',
+            borderRightWidth: '4px',
+            borderColor: '#000000',
+            boxShadow: '4px 4px 0 0 #000000',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-bold text-[#000000] font-sans">
+                ManagHer / Mini Business Plan
+              </h1>
+              <p className="text-[#000000] text-sm font-sans font-light mt-1">
+                Bangun model bisnis dengan sticky note
+              </p>
+            </div>
             <button
+              onClick={() => router.push(`/dashboard/${projectId}`)}
+              className="bg-[#ffcccc] text-[#000000] px-4 py-2 font-semibold font-sans hover:bg-[#ffa8a8] transition-colors"
+              style={{
+                borderStyle: 'solid',
+                borderTopWidth: '1px',
+                borderLeftWidth: '1px',
+                borderBottomWidth: '4px',
+                borderRightWidth: '4px',
+                borderColor: '#000000',
+              }}
+            >
+              ← Dashboard
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex gap-6 flex-col lg:flex-row">
+        {/* Sidebar */}
+        <div
+          className="w-full lg:w-64"
+          style={{
+            backgroundColor: '#f0f0f0',
+            borderStyle: 'solid',
+            borderTopWidth: '1px',
+            borderLeftWidth: '1px',
+            borderBottomWidth: '4px',
+            borderRightWidth: '4px',
+            borderColor: '#000000',
+            boxShadow: '4px 4px 0 0 #000000',
+          }}
+        >
+          <nav className="p-4 space-y-2">
+            {SIDEBAR_MENU.map((item) => (
+              <button
                 key={item.id}
                 onClick={() => {
-                if (item.id === 'ide-bisnis') {
+                  if (item.id === 'ide-bisnis') {
                     router.push(`/dashboard/${projectId}/plan`);
-                } else {
+                  } else {
                     router.push(`/dashboard/${projectId}/plan/${item.id}`);
-                }
+                  }
                 }}
-                className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${
-                item.id === 'bmc'
-                    ? 'bg-[#8B0000] text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                className={`w-full flex items-center space-x-3 px-4 py-3 font-medium transition-colors ${
+                  item.id === 'bmc'
+                    ? 'bg-[#b80000] text-white'
+                    : 'text-[#000000] hover:bg-[#ffcccc]'
                 }`}
-            >
-                {item.label}
-            </button>
+                style={{ borderRadius: '0', textAlign: 'left' }}
+              >
+                <span>•</span>
+                <span>{item.label}</span>
+              </button>
             ))}
           </nav>
         </div>
 
-        {/* BMC Canvas */}
-        <div className="flex-1">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Business Model Canvas</h2>
-            <p className="text-sm text-gray-600 mb-4">
-              🔹 Seret teks dari satu blok ke blok lain untuk memindahkan konten.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {BMC_BLOCKS.map((block) => (
-                <div
-                  key={block.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, block.id)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, block.id)}
-                  className={`p-4 rounded-lg border border-gray-300 ${block.color} cursor-grab active:cursor-grabbing`}
-                >
-                  <h3 className="font-bold text-gray-800 mb-1">{block.title}</h3>
-                  <p className="text-xs text-gray-600 mb-3">{block.subtitle}</p>
-                  <textarea
-                    value={bmcData[block.id] || ''}
-                    onChange={(e) => handleChange(block.id, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-[#8B0000] outline-none resize-none"
-                    rows="4"
-                    placeholder={block.placeholder}
+        {/* Konten Utama */}
+        <div className="flex-1 space-y-6">
+          {/* Sticky Note Creator */}
+          <div
+            className="font-sans"
+            style={{
+              backgroundColor: '#ffffff',
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+              boxShadow: '4px 4px 0 0 #000000',
+            }}
+          >
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-[#000000] mb-4">Buat Sticky Note</h3>
+              
+              {/* Pilih Warna */}
+              <div className="flex flex-wrap gap-2 mb-3">
+                {NOTE_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setNoteColor(color)}
+                    className={`w-6 h-6 border-2 ${noteColor === color ? 'border-[#000000]' : 'border-transparent'}`}
+                    style={{ backgroundColor: color, borderRadius: '0' }}
                   />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="mt-6 text-xs text-gray-500">
-              <p>Source: Strategyzer.com</p>
+              {/* Input Teks */}
+              <textarea
+                value={noteContent}
+                onChange={(e) => setNoteContent(e.target.value)}
+                className="w-full px-3 py-2 outline-none font-sans resize-vertical mb-3"
+                rows="3"
+                placeholder="Tulis ide Anda di sini..."
+                style={{
+                  borderStyle: 'solid',
+                  borderTopWidth: '1px',
+                  borderLeftWidth: '1px',
+                  borderBottomWidth: '4px',
+                  borderRightWidth: '4px',
+                  borderColor: '#000000',
+                  borderRadius: '0',
+                }}
+              />
+
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={handleResetAll}
+                  className="bg-[#ffcccc] text-[#000000] px-4 py-2 font-semibold font-sans hover:bg-[#ffa8a8]"
+                  style={{
+                    borderStyle: 'solid',
+                    borderTopWidth: '1px',
+                    borderLeftWidth: '1px',
+                    borderBottomWidth: '4px',
+                    borderRightWidth: '4px',
+                    borderColor: '#000000',
+                    borderRadius: '0',
+                  }}
+                >
+                  Reset Semua
+                </button>
+
+                <button
+                  onClick={handleCreateNote}
+                  className="bg-[#b80000] text-white px-4 py-2 font-semibold font-sans hover:bg-[#8B0000]"
+                  style={{
+                    borderStyle: 'solid',
+                    borderTopWidth: '1px',
+                    borderLeftWidth: '1px',
+                    borderBottomWidth: '4px',
+                    borderRightWidth: '4px',
+                    borderColor: '#000000',
+                    borderRadius: '0',
+                  }}
+                >
+                  Buat Note
+                </button>
+              </div>
+
+              {/* Preview Note (siap diseret) */}
+              {previewNote && (
+                <div
+                  className="mt-4 p-3 text-[#000000] font-sans cursor-grab"
+                  draggable
+                  onDragStart={handleDragStart}
+                  style={{
+                    backgroundColor: previewNote.color,
+                    border: '1px solid #000000',
+                    borderRadius: '0',
+                  }}
+                >
+                  {previewNote.content}
+                  <div className="text-xs mt-1 text-[#000000]">← Seret ke blok BMC</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* BMC Board */}
+          <div
+            className="font-sans"
+            style={{
+              backgroundColor: '#ffffff',
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+              boxShadow: '4px 4px 0 0 #000000',
+            }}
+          >
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-[#000000] mb-4">Business Model Canvas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {BMC_BLOCKS.map((block) => (
+                  <div
+                    key={block.id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, block.id)}
+                    className="relative"
+                    style={{
+                      border: '1px dashed #000000',
+                      minHeight: '180px',
+                      padding: '1rem',
+                      borderRadius: '0',
+                      backgroundColor: '#f9f9f9',
+                    }}
+                  >
+                    <div>
+                      <div className="font-bold text-[#000000]">{block.title}</div>
+                      <div className="text-[#000000] text-xs font-light italic mb-2">{block.description}</div>
+                    </div>
+
+                    {/* Area Konten (Scrollable jika >2 note) */}
+                    <div
+                      className="space-y-2"
+                      style={{
+                        maxHeight: (bmcData[block.id]?.length || 0) > 2 ? '120px' : 'none',
+                        overflowY: (bmcData[block.id]?.length || 0) > 2 ? 'auto' : 'visible',
+                      }}
+                    >
+                      {(bmcData[block.id] || []).map((note) => (
+                        <div
+                          key={note.id}
+                          className="p-2 text-[#000000] text-sm font-sans break-words relative"
+                          style={{
+                            backgroundColor: note.color,
+                            border: '1px solid #000000',
+                            borderRadius: '0',
+                          }}
+                        >
+                          {note.content}
+                          <button
+                            onClick={() => handleDeleteNote(block.id, note.id)}
+                            className="absolute top-0 right-0 w-5 h-5 text-[#b80000] font-bold"
+                            style={{
+                              border: '1px solid #000000',
+                              borderRadius: '0',
+                              backgroundColor: '#ffcccc',
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+
+                      {/* Tampilkan contoh jika belum ada note */}
+                      {(bmcData[block.id] || []).length === 0 && (
+                        <div className="text-[#000000] text-xs font-sans font-light italic">
+                          Contoh: {block.example}
+                        </div>
+                      )}
+                    </div>
+
+                    {(bmcData[block.id] || []).length === 0 && (
+                      <div className="text-[#000000] text-xs font-sans font-light mt-2">
+                        Seret note ke sini
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 text-[#000000] text-xs font-sans font-light">
+                <p>Source: Strategyzer.com</p>
+              </div>
             </div>
           </div>
         </div>
