@@ -4,8 +4,8 @@ import { create } from 'zustand';
 const useProjectStore = create((set, get) => ({
   // === Daftar Proyek ===
   projects: [
-    { id: '1', name: 'Kafe Cantik', manager: 'Rina S.', imageUrl: '/only-one-red-shoes.png' },
-    { id: '2', name: 'Online Store Fashion', manager: 'Dewi A.', imageUrl: '/only-one-red-shoes.png' },
+    { id: '1', name: 'Kafe Cantik', manager: 'Rina S.', imageUrl: 'https://images.pexels.com/photos/1307698/pexels-photo-1307698.jpeg' },
+    { id: '2', name: 'Online Store Fashion', manager: 'Dewi A.', imageUrl: 'https://images.pexels.com/photos/5585793/pexels-photo-5585793.jpeg' },
   ],
 
   // === Proyek yang sedang aktif ===

@@ -13,11 +13,11 @@ const STEPS = [
 ];
 
 const SIDEBAR_MENU = [
-  { id: 'ide-bisnis', label: 'Ide bisnis' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'brand', label: 'Brand Identity' },
-  { id: 'validasi', label: 'Validasi' },
-  { id: 'bmc', label: 'BMC' },
+  { id: 'ide-bisnis', label: 'Ide bisnis', icon: '💡' },
+  { id: 'pricing', label: 'Pricing', icon: '💰' },
+  { id: 'brand', label: 'Brand Identity', icon: '🎨' },
+  { id: 'validasi', label: 'Validasi', icon: '🔍' },
+  { id: 'bmc', label: 'BMC', icon: '📊' },
 ];
 
 const PLACEHOLDERS = {
@@ -26,6 +26,9 @@ const PLACEHOLDERS = {
   tagline: 'Contoh: Tagline brand Anda',
   color: 'Contoh: #FF5733 atau "Merah"',
 };
+
+// Warna per langkah
+const STEP_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24'];
 
 export default function BrandPage({ params }) {
   const { projectId } = use(params);
@@ -110,18 +113,9 @@ export default function BrandPage({ params }) {
     }
   };
 
-  const handleEdit = () => {
-    setCurrentStepIndex(0);
-  };
-
-  // Preview data
-  const brandData = getPhaseData(projectId, 'brandIdentity') || {};
-  const previewItems = [
-    { key: 'brandName', label: 'Nama Brand', value: formData.brandName || '-' },
-    { key: 'logoUrl', label: 'Logo', value: formData.logoUrl || '-' },
-    { key: 'tagline', label: 'Tagline', value: formData.tagline || '-' },
-    { key: 'color', label: 'Warna', value: formData.color || '-' },
-  ];
+  // Hitung progress
+  const filledFields = Object.values(formData).filter((v) => v.trim() !== '').length;
+  const progressPercent = Math.round((filledFields / STEPS.length) * 100);
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-4 sm:p-6">
@@ -146,7 +140,7 @@ export default function BrandPage({ params }) {
                 ManagHer / Mini Business Plan
               </h1>
               <p className="text-[#000000] text-sm font-sans font-light mt-1">
-                Bangun identitas brand bisnismu
+                Bangun identitas brand bisnismu 🎨
               </p>
             </div>
             <button
@@ -168,11 +162,11 @@ export default function BrandPage({ params }) {
       </header>
 
       <div className="flex gap-6 flex-col lg:flex-row">
-        {/* Sidebar Navigasi Utama */}
+        {/* Sidebar Cantik */}
         <div
-          className="w-full lg:w-64"
+          className="w-full lg:w-64 font-sans"
           style={{
-            backgroundColor: '#f0f0f0',
+            backgroundColor: '#fff8f0',
             borderStyle: 'solid',
             borderTopWidth: '1px',
             borderLeftWidth: '1px',
@@ -182,6 +176,35 @@ export default function BrandPage({ params }) {
             boxShadow: '4px 4px 0 0 #000000',
           }}
         >
+          <div
+            className="p-4 border-b border-[#000000]"
+            style={{
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <div
+                className="w-10 h-10 flex items-center justify-center font-bold text-white"
+                style={{
+                  backgroundColor: '#b80000',
+                  border: '2px solid #000000',
+                  borderRadius: '0',
+                }}
+              >
+                MH
+              </div>
+              <div>
+                <h3 className="font-bold text-[#000000]">ManagHer</h3>
+                <p className="text-[#000000] text-xs font-light">Solopreneur Journey</p>
+              </div>
+            </div>
+          </div>
+
           <nav className="p-4 space-y-2">
             {SIDEBAR_MENU.map((item) => (
               <button
@@ -193,23 +216,57 @@ export default function BrandPage({ params }) {
                     router.push(`/dashboard/${projectId}/plan/${item.id}`);
                   }
                 }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 font-medium transition-colors ${
                   item.id === 'brand'
                     ? 'bg-[#b80000] text-white'
                     : 'text-[#000000] hover:bg-[#ffcccc]'
                 }`}
                 style={{ borderRadius: '0', textAlign: 'left' }}
               >
-                <span>•</span>
+                <span>{item.icon}</span>
                 <span>{item.label}</span>
               </button>
             ))}
           </nav>
+
+          <div className="p-4 text-xs text-[#000000] font-light border-t border-[#000000] mt-auto">
+            v1.0 — Brand Identity
+          </div>
         </div>
 
         {/* Konten Utama */}
         <div className="flex-1 space-y-6">
-          {/* Card: Navigasi Langkah + Input Form */}
+          {/* Progress Card */}
+          <div
+            className="font-sans p-6"
+            style={{
+              backgroundColor: '#ffffff',
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+              boxShadow: '4px 4px 0 0 #000000',
+            }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-[#000000]">🎨 Progress Brand Identity</h2>
+              <span className="text-sm font-semibold text-[#000000]">{progressPercent}%</span>
+            </div>
+            <div className="w-full bg-[#e0e0e0] h-3 mb-2">
+              <div
+                className="h-3"
+                style={{
+                  width: `${progressPercent}%`,
+                  backgroundColor: STEP_COLORS[currentStepIndex],
+                  border: '1px solid #000000',
+                }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Form Card */}
           <div
             className="font-sans"
             style={{
@@ -232,13 +289,23 @@ export default function BrandPage({ params }) {
                     <button
                       key={step.key}
                       onClick={() => setCurrentStepIndex(index)}
-                      className={`px-3 py-1 text-sm font-sans transition-colors ${
+                      className={`px-3 py-1 text-sm font-sans transition-colors flex items-center gap-1 ${
                         index === currentStepIndex
                           ? 'bg-[#b80000] text-white'
                           : 'bg-[#ffcccc] text-[#000000] hover:bg-[#ffa8a8]'
                       }`}
                       style={{ borderRadius: '0' }}
                     >
+                      <span
+                        className="w-4 h-4 rounded-full flex items-center justify-center text-xs"
+                        style={{
+                          backgroundColor: STEP_COLORS[index],
+                          color: '#fff',
+                          border: '1px solid #000',
+                        }}
+                      >
+                        {index + 1}
+                      </span>
                       {step.label}
                     </button>
                   ))}
@@ -254,9 +321,7 @@ export default function BrandPage({ params }) {
                     <div
                       className="border-dashed border-2 border-[#000000] p-4 text-center cursor-pointer mb-3"
                       onClick={() => document.getElementById('logo-upload').click()}
-                      style={{
-                        borderRadius: '0',
-                      }}
+                      style={{ borderRadius: '0' }}
                     >
                       {formData.logoUrl ? (
                         <div>
@@ -404,7 +469,7 @@ export default function BrandPage({ params }) {
             </div>
           </div>
 
-          {/* Preview Card */}
+          {/* Preview Card — Tanpa tombol Edit */}
           <div
             className="font-sans"
             style={{
@@ -421,36 +486,26 @@ export default function BrandPage({ params }) {
             <div className="p-6">
               <h3 className="text-xl font-bold text-[#000000] mb-4">Preview Brand Identity</h3>
               <ul className="space-y-2 mb-6">
-                {previewItems.map((item) => (
-                  <li
-                    key={item.key}
-                    className="flex justify-between py-1 font-sans"
-                    style={{ borderBottom: '1px solid #e5e5e5' }}
-                  >
-                    <span className="text-[#000000] text-sm font-sans font-light">{item.label}</span>
-                    <span className="text-[#000000] text-sm font-sans font-medium break-all">{item.value}</span>
-                  </li>
-                ))}
+                {Object.entries(formData).map(([key, value]) => {
+                  const label = STEPS.find((s) => s.key === key)?.label || key;
+                  return (
+                    <li
+                      key={key}
+                      className="flex justify-between py-1 font-sans"
+                      style={{ borderBottom: '1px solid #e5e5e5' }}
+                    >
+                      <span className="text-[#000000] text-sm font-sans font-light">{label}</span>
+                      <span className="text-[#000000] text-sm font-sans font-medium break-all">
+                        {value || '-'}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleEdit}
-                  className="flex-1 bg-[#b80000] text-white px-3 py-2 font-semibold font-sans hover:bg-[#8B0000]"
-                  style={{
-                    borderStyle: 'solid',
-                    borderTopWidth: '1px',
-                    borderLeftWidth: '1px',
-                    borderBottomWidth: '4px',
-                    borderRightWidth: '4px',
-                    borderColor: '#000000',
-                    borderRadius: '0',
-                  }}
-                >
-                  Edit
-                </button>
+              <div className="flex justify-center">
                 <button
                   onClick={handleReset}
-                  className="flex-1 bg-[#ffcccc] text-[#000000] px-3 py-2 font-semibold font-sans hover:bg-[#ffa8a8]"
+                  className="w-full bg-[#ffcccc] text-[#000000] px-3 py-2 font-semibold font-sans hover:bg-[#ffa8a8]"
                   style={{
                     borderStyle: 'solid',
                     borderTopWidth: '1px',

@@ -13,12 +13,15 @@ const STEPS = [
 ];
 
 const SIDEBAR_MENU = [
-  { id: 'ide-bisnis', label: 'Ide bisnis' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'brand', label: 'Brand Identity' },
-  { id: 'validasi', label: 'Validasi' },
-  { id: 'bmc', label: 'BMC' },
+  { id: 'ide-bisnis', label: 'Ide bisnis', icon: '💡' },
+  { id: 'pricing', label: 'Pricing', icon: '💰' },
+  { id: 'brand', label: 'Brand Identity', icon: '🎨' },
+  { id: 'validasi', label: 'Validasi', icon: '🔍' },
+  { id: 'bmc', label: 'BMC', icon: '📊' },
 ];
+
+// Warna per langkah (untuk progress & bullet)
+const STEP_COLORS = ['#ff9e6d', '#6dd5ed', '#8a4fff'];
 
 export default function PricingPage({ params }) {
   const { projectId } = use(params);
@@ -47,22 +50,22 @@ export default function PricingPage({ params }) {
   const currentValue = formData[currentStep.key];
 
   const handleChange = (value) => {
-    setFormData((prev) => ({ ...prev, [currentStep.key]: value }));
+    if (/^[\d.,]*$/.test(value) || value === '') {
+      setFormData((prev) => ({ ...prev, [currentStep.key]: value }));
+    }
   };
 
-  const handleSave = () => {
+  const handleSaveCurrent = () => {
     updatePhaseData(projectId, 'pricing', {
       [currentStep.key]: currentValue,
     });
   };
 
-  const handleSaveCurrent = () => {
-  updatePhaseData(projectId, 'pricing', {
-    [currentStep.key]: currentValue,
-  });
-};
-
   const handleNext = () => {
+    if (!currentValue.trim()) {
+      alert('Harap isi field terlebih dahulu.');
+      return;
+    }
     handleSaveCurrent();
     if (currentStepIndex < STEPS.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
@@ -70,25 +73,21 @@ export default function PricingPage({ params }) {
   };
 
   const handleFinish = () => {
-    // Simpan SEMUA data, bukan hanya langkah terakhir
+    if (!currentValue.trim()) {
+      alert('Harap isi field terlebih dahulu.');
+      return;
+    }
     updatePhaseData(projectId, 'pricing', {
       materialCost: formData.materialCost,
       otherCost: formData.otherCost,
       sellingPrice: formData.sellingPrice,
     });
-    alert('✅ Data pricing berhasil disimpan!');
-    // Opsional: redirect ke halaman berikutnya
-    // router.push(`/dashboard/${projectId}/plan/brand`);
-  };
-
-  const handleEdit = () => {
-    // Kembali ke langkah pertama untuk edit ulang
-    setCurrentStepIndex(0);
+    alert('✅ Strategi pricing berhasil disimpan!');
   };
 
   const handlePrev = () => {
     if (currentStepIndex > 0) {
-      handleSave();
+      handleSaveCurrent();
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
@@ -105,12 +104,21 @@ export default function PricingPage({ params }) {
     }
   };
 
-  // Preview selalu tampil
-  const previewItems = [
-    { key: 'materialCost', label: 'Biaya Bahan Baku', value: formData.materialCost || '-' },
-    { key: 'otherCost', label: 'Biaya Lain-Lain', value: formData.otherCost || '-' },
-    { key: 'sellingPrice', label: 'Harga Jual', value: formData.sellingPrice || '-' },
-  ];
+  // Hitung progress
+  const filledFields = Object.values(formData).filter((v) => v.trim() !== '').length;
+  const progressPercent = Math.round((filledFields / STEPS.length) * 100);
+
+  // Hitung margin
+  const parseRupiah = (str) => {
+    if (!str) return 0;
+    const clean = str.replace(/[^0-9]/g, '');
+    return clean ? parseInt(clean, 10) : 0;
+  };
+
+  const totalCost = parseRupiah(formData.materialCost) + parseRupiah(formData.otherCost);
+  const sellingPriceNum = parseRupiah(formData.sellingPrice);
+  const profit = sellingPriceNum - totalCost;
+  const marginPercent = sellingPriceNum > 0 ? Math.round((profit / sellingPriceNum) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-4 sm:p-6">
@@ -135,7 +143,7 @@ export default function PricingPage({ params }) {
                 ManagHer / Mini Business Plan
               </h1>
               <p className="text-[#000000] text-sm font-sans font-light mt-1">
-                Atur strategi harga bisnismu
+                Atur strategi harga bisnismu 💰
               </p>
             </div>
             <button
@@ -157,11 +165,11 @@ export default function PricingPage({ params }) {
       </header>
 
       <div className="flex gap-6 flex-col lg:flex-row">
-        {/* Sidebar Navigasi Utama */}
+        {/* Sidebar Cantik — Tanpa badge */}
         <div
-          className="w-full lg:w-64"
+          className="w-full lg:w-64 font-sans"
           style={{
-            backgroundColor: '#f0f0f0',
+            backgroundColor: '#fff8f0',
             borderStyle: 'solid',
             borderTopWidth: '1px',
             borderLeftWidth: '1px',
@@ -171,6 +179,35 @@ export default function PricingPage({ params }) {
             boxShadow: '4px 4px 0 0 #000000',
           }}
         >
+          <div
+            className="p-4 border-b border-[#000000]"
+            style={{
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <div
+                className="w-10 h-10 flex items-center justify-center font-bold text-white"
+                style={{
+                  backgroundColor: '#b80000',
+                  border: '2px solid #000000',
+                  borderRadius: '0',
+                }}
+              >
+                MH
+              </div>
+              <div>
+                <h3 className="font-bold text-[#000000]">ManagHer</h3>
+                <p className="text-[#000000] text-xs font-light">Solopreneur Journey</p>
+              </div>
+            </div>
+          </div>
+
           <nav className="p-4 space-y-2">
             {SIDEBAR_MENU.map((item) => (
               <button
@@ -182,23 +219,76 @@ export default function PricingPage({ params }) {
                     router.push(`/dashboard/${projectId}/plan/${item.id}`);
                   }
                 }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 font-medium transition-colors ${
                   item.id === 'pricing'
                     ? 'bg-[#b80000] text-white'
                     : 'text-[#000000] hover:bg-[#ffcccc]'
                 }`}
                 style={{ borderRadius: '0', textAlign: 'left' }}
               >
-                <span>•</span>
+                <span>{item.icon}</span>
                 <span>{item.label}</span>
               </button>
             ))}
           </nav>
+
+          <div className="p-4 text-xs text-[#000000] font-light border-t border-[#000000] mt-auto">
+            v1.0 — Strategi Harga
+          </div>
         </div>
 
-        {/* Konten Utama: Gabungan Langkah + Input + Preview */}
+        {/* Konten Utama */}
         <div className="flex-1 space-y-6">
-          {/* Card: Navigasi Langkah + Input Form */}
+          {/* Progress Card */}
+          <div
+            className="font-sans p-6"
+            style={{
+              backgroundColor: '#ffffff',
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+              boxShadow: '4px 4px 0 0 #000000',
+            }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-[#000000]">💰 Strategi Harga Kamu</h2>
+              <span className="text-sm font-semibold text-[#000000]">{progressPercent}%</span>
+            </div>
+            <div className="w-full bg-[#e0e0e0] h-3 mb-2">
+              <div
+                className="h-3"
+                style={{
+                  width: `${progressPercent}%`,
+                  backgroundColor: STEP_COLORS[currentStepIndex],
+                  border: '1px solid #000000',
+                }}
+              ></div>
+            </div>
+
+            {/* Insight Margin (tanpa badge) */}
+            {formData.sellingPrice && (
+              <div
+                className="mt-4 p-3 text-center"
+                style={{
+                  backgroundColor: profit >= 0 ? '#e6ffe6' : '#ffe6e6',
+                  border: '1px solid #000000',
+                  borderRadius: '0',
+                }}
+              >
+                <div className="font-bold text-[#000000]">
+                  {profit >= 0 ? '✅ Profit!' : '⚠️ Rugi!'}
+                </div>
+                <div className="text-sm">
+                  Margin: <strong>{marginPercent}%</strong> | Profit: Rp {profit.toLocaleString('id-ID')}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Form Card */}
           <div
             className="font-sans"
             style={{
@@ -221,13 +311,23 @@ export default function PricingPage({ params }) {
                     <button
                       key={step.key}
                       onClick={() => setCurrentStepIndex(index)}
-                      className={`px-3 py-1 text-sm font-sans transition-colors ${
+                      className={`px-3 py-1 text-sm font-sans transition-colors flex items-center gap-1 ${
                         index === currentStepIndex
                           ? 'bg-[#b80000] text-white'
                           : 'bg-[#ffcccc] text-[#000000] hover:bg-[#ffa8a8]'
                       }`}
                       style={{ borderRadius: '0' }}
                     >
+                      <span
+                        className="w-4 h-4 rounded-full flex items-center justify-center text-xs"
+                        style={{
+                          backgroundColor: STEP_COLORS[index],
+                          color: '#fff',
+                          border: '1px solid #000',
+                        }}
+                      >
+                        {index + 1}
+                      </span>
                       {step.label}
                     </button>
                   ))}
@@ -293,7 +393,7 @@ export default function PricingPage({ params }) {
             </div>
           </div>
 
-          {/* Card Preview (di bawah) */}
+          {/* Preview Card */}
           <div
             className="font-sans"
             style={{
@@ -310,16 +410,21 @@ export default function PricingPage({ params }) {
             <div className="p-6">
               <h3 className="text-xl font-bold text-[#000000] mb-4">Preview Pricing</h3>
               <ul className="space-y-2 mb-6">
-                {previewItems.map((item) => (
-                  <li
-                    key={item.key}
-                    className="flex justify-between py-1 font-sans"
-                    style={{ borderBottom: '1px solid #e5e5e5' }}
-                  >
-                    <span className="text-[#000000] text-sm font-sans font-light">{item.label}</span>
-                    <span className="text-[#000000] text-sm font-sans font-medium">{item.value}</span>
-                  </li>
-                ))}
+                {Object.entries(formData).map(([key, value]) => {
+                  const label = STEPS.find((s) => s.key === key)?.label || key;
+                  return (
+                    <li
+                      key={key}
+                      className="flex justify-between py-1 font-sans"
+                      style={{ borderBottom: '1px solid #e5e5e5' }}
+                    >
+                      <span className="text-[#000000] text-sm font-sans font-light">{label}</span>
+                      <span className="text-[#000000] text-sm font-sans font-medium">
+                        {value ? `Rp ${value}` : '-'}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
               <div className="flex gap-2">
                 <button

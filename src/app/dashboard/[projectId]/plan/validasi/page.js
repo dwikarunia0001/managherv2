@@ -147,11 +147,11 @@ export default function ValidasiPage({ params }) {
   };
 
   const SIDEBAR_MENU = [
-    { id: 'ide-bisnis', label: 'Ide bisnis' },
-    { id: 'pricing', label: 'Pricing' },
-    { id: 'brand', label: 'Brand Identity' },
-    { id: 'validasi', label: 'Validasi' },
-    { id: 'bmc', label: 'BMC' },
+    { id: 'ide-bisnis', label: 'Ide bisnis', icon: '💡' },
+    { id: 'pricing', label: 'Pricing', icon: '💰' },
+    { id: 'brand', label: 'Brand Identity', icon: '🎨' },
+    { id: 'validasi', label: 'Validasi', icon: '🔍' },
+    { id: 'bmc', label: 'BMC', icon: '📊' },
   ];
 
   return (
@@ -177,7 +177,7 @@ export default function ValidasiPage({ params }) {
                 ManagHer / Mini Business Plan
               </h1>
               <p className="text-[#000000] text-sm font-sans font-light mt-1">
-                Validasi ide bisnismu dengan data nyata
+                Validasi ide bisnismu dengan data nyata 🔍
               </p>
             </div>
             <button
@@ -199,11 +199,11 @@ export default function ValidasiPage({ params }) {
       </header>
 
       <div className="flex gap-6 flex-col lg:flex-row">
-        {/* Sidebar */}
+        {/* Sidebar Cantik */}
         <div
-          className="w-full lg:w-64"
+          className="w-full lg:w-64 font-sans"
           style={{
-            backgroundColor: '#f0f0f0',
+            backgroundColor: '#fff8f0',
             borderStyle: 'solid',
             borderTopWidth: '1px',
             borderLeftWidth: '1px',
@@ -213,6 +213,35 @@ export default function ValidasiPage({ params }) {
             boxShadow: '4px 4px 0 0 #000000',
           }}
         >
+          <div
+            className="p-4 border-b border-[#000000]"
+            style={{
+              borderStyle: 'solid',
+              borderTopWidth: '1px',
+              borderLeftWidth: '1px',
+              borderBottomWidth: '4px',
+              borderRightWidth: '4px',
+              borderColor: '#000000',
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <div
+                className="w-10 h-10 flex items-center justify-center font-bold text-white"
+                style={{
+                  backgroundColor: '#b80000',
+                  border: '2px solid #000000',
+                  borderRadius: '0',
+                }}
+              >
+                MH
+              </div>
+              <div>
+                <h3 className="font-bold text-[#000000]">ManagHer</h3>
+                <p className="text-[#000000] text-xs font-light">Solopreneur Journey</p>
+              </div>
+            </div>
+          </div>
+
           <nav className="p-4 space-y-2">
             {SIDEBAR_MENU.map((item) => (
               <button
@@ -224,18 +253,22 @@ export default function ValidasiPage({ params }) {
                     router.push(`/dashboard/${projectId}/plan/${item.id}`);
                   }
                 }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 font-medium transition-colors ${
                   item.id === 'validasi'
                     ? 'bg-[#b80000] text-white'
                     : 'text-[#000000] hover:bg-[#ffcccc]'
                 }`}
                 style={{ borderRadius: '0', textAlign: 'left' }}
               >
-                <span>•</span>
+                <span>{item.icon}</span>
                 <span>{item.label}</span>
               </button>
             ))}
           </nav>
+
+          <div className="p-4 text-xs text-[#000000] font-light border-t border-[#000000] mt-auto">
+            v1.0 — Validasi Ide
+          </div>
         </div>
 
         {/* Konten Utama */}
